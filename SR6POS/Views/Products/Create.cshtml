@@ -10,7 +10,6 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="CategoryId" class="control-label"></label>
@@ -46,9 +45,26 @@
                 <select asp-for="SaleUnit" class ="form-control" asp-items="ViewBag.SaleUnit"></select>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <button class="btn btn-primary" id="save">
+                    <i class="fa fa-save"></i> Save
+                </button>
             </div>
-        </form>
+    </div>
+    <div class="col-md-6">
+        <table class="table table-bordered" id="t1">
+            <thead>
+                <tr>
+                    <th style="width:200px">Unit</th>
+                    <th>Price</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+        </table>
+        <p class="text-right">
+            <button class="btn btn-primary" id="AddRow">
+                <i class="fa fa-plus"></i> Add
+            </button>
+        </p>
     </div>
 </div>
 
@@ -58,4 +74,15 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function () {
+
+            $("#AddRow").click(function () {
+                var row = "<tr><td><select class='form-control'></select></td>";
+                row += "<td><input class='form-control'/></td>";
+                row += "<td><button class='btn btn-danger'><i class='fa fa-trash'></i></button></td></tr>";
+                $("#t1").append(row);
+            });
+        });
+    </script>
 }
