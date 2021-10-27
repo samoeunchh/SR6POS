@@ -59,11 +59,20 @@ namespace SR6POS.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,CategoryId,ProductName,Description,Barcode,OnHand,Cost,SaleUnit")] Product product)
+        public async Task<IActionResult> Create(Product product)
         {
             if (ModelState.IsValid)
             {
-                product.ProductId = Guid.NewGuid();
+                var pid = Guid.NewGuid();
+                if(product.ProductPrices != null)
+                {
+                    for(int i = 0; i < product.ProductPrices.Count; i++)
+                    {
+                        product.ProductPrices[i].ProductId = pid;
+                        product.ProductPrices[i].ProductPriceId = Guid.NewGuid();
+                    }
+                }
+                product.ProductId = pid;
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -159,6 +168,8 @@ namespace SR6POS.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<JsonResult> GetUnits()
+            => Json(await _context.Unit.ToListAsync());
         private bool ProductExists(Guid id)
         {
             return _context.Product.Any(e => e.ProductId == id);

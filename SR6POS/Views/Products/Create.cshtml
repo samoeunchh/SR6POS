@@ -9,6 +9,7 @@
 <h4>Product</h4>
 <hr />
 <div class="row">
+    @Html.AntiForgeryToken()
     <div class="col-md-4">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -74,15 +75,68 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script>
+<script>
+    var options = "";
+    var productPrices = [];
         $(document).ready(function () {
-
+            $("#save").click(function () {
+                var i = 0;
+                var token = $("[name='__RequestVerificationToken']").val();
+            $("#t1 tr").each(function () {
+                if (i > 0) {
+                    var j = i - 1;
+                    var unit = document.getElementsByName("unit[]")[j].value;
+                    var price = document.getElementsByName("price[]")[j].value;
+                    productPrices.push({ UnitId: unit, Price: price });
+                }
+                i++;
+            });
+            var product = {
+                __RequestVerificationToken: token,
+                "CategoryId": $("#CategoryId").val(),
+                "SaleUnit": $("#SaleUnit").val(),
+                "ProductName": $("#ProductName").val(),
+                "Barcode": $("#Barcode").val(),
+                "Description": $("#Description").val(),
+                "OnHand": $("#OnHand").val(),
+                "Cost": $("#Cost").val(),
+                "ProductPrices": productPrices
+            };
+            $.ajax({
+                    type: "POST",
+                    dataType: "Html",
+                url: '@Url.Action("Create", "Products")',
+                data: product,
+                    success: function (data) {
+                        console.log(data);
+                        alert("Record added successfully.");
+                        window.location.replace('@Url.Action("Index", "Products")');
+                    },
+                    error: function (error) {
+                        jsonValue = jQuery.parseJSON(error.responseText);
+                        alert("Error : " + jsonValue);
+                    }
+                });
+            });
+            $.ajax({
+                method: "GET",
+                url: "GetUnits",
+                contentType: "application/json",
+                success: function (data) {
+                    $.each(data, function (i, v) {
+                        options += "<option value='"+ v.unitId +"'>" + v.unitName +"</option>";
+                    });
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
             $("#AddRow").click(function () {
-                var row = "<tr><td><select class='form-control'></select></td>";
-                row += "<td><input class='form-control'/></td>";
+                var row = "<tr><td><select class='form-control' name='unit[]'>" + options + "</select></td>";
+                row += "<td><input class='form-control' name='price[]'/></td>";
                 row += "<td><button class='btn btn-danger'><i class='fa fa-trash'></i></button></td></tr>";
                 $("#t1").append(row);
             });
         });
-    </script>
+</script>
 }
