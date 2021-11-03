@@ -45,6 +45,7 @@ namespace SR6POS.Controllers
                              join c in _context.Category on p.CategoryId equals c.CategoryId
                              select new
                              {
+                                 p.ProductId,
                                  p.ProductName,
                                  p.Description,
                                  p.Barcode,
