@@ -1,0 +1,96 @@
+﻿@model SR6POS.Models.Sale
+
+@{
+    ViewData["Title"] = "Create";
+}
+<h4>Sale Product</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group row">
+            <label asp-for="CustomerId" class="control-label"></label>
+            <select asp-for="CustomerId" class="form-control" asp-items="ViewBag.CustomerId"></select>
+        </div>
+        <div class="form-group row">
+            <input id="search" name="search" class="form-control"  placeholder="Barcode..."/>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <label asp-for="IssueDate" class="control-label"></label>
+            <input asp-for="IssueDate" class="form-control" />
+            <span asp-validation-for="IssueDate" class="text-danger"></span>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <table class="table table-bordered" id="tsale">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Unit</th>
+                <th>Price</th>
+                <th>Qty</th>
+                <th>Amount</th>
+                <th>Discount</th>
+                <th>Total</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <input type="submit" value="Create" class="btn btn-primary" />
+        </div>
+    </div>
+    <div class="col-md-6">
+        <p class="text-right">
+            <div class="form-group row">
+                <label asp-for="Total" class="col-md-3 col-form-label"></label>
+                <div class="col-md-9">
+                    <input asp-for="Total" class="form-control" readonly />
+                    <span asp-validation-for="Total" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label asp-for="Discount" class="col-md-3 col-form-label"></label>
+                <div class="col-md-9">
+                    <input asp-for="Discount" class="form-control" />
+                    <span asp-validation-for="Discount" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label asp-for="GrandTotal" class="col-md-3 col-form-label"></label>
+                <div class="col-md-9">
+                    <input asp-for="GrandTotal" class="form-control" readonly />
+                    <span asp-validation-for="GrandTotal" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label asp-for="Receive" class="col-md-3 col-form-label"></label>
+                <div class="col-md-9">
+                    <input asp-for="Receive" class="form-control" />
+                    <span asp-validation-for="Receive" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label asp-for="Change" class="col-md-3 col-form-label"></label>
+                <div class="col-md-9">
+                    <input asp-for="Change" class="form-control" readonly />
+                    <span asp-validation-for="Change" class="text-danger"></span>
+                </div>
+            </div>
+           
+        </p>
+    </div>
+</div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
