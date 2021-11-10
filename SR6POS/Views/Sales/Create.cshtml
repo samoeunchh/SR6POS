@@ -62,7 +62,7 @@
                         <div class="form-group row">
                             <label asp-for="Discount" class="col-md-3 col-form-label"></label>
                             <div class="col-md-9">
-                                <input asp-for="Discount" class="form-control" />
+                                <input asp-for="Discount" class="form-control" value="0"/>
                                 <span asp-validation-for="Discount" class="text-danger"></span>
                             </div>
                         </div>
@@ -76,7 +76,7 @@
                         <div class="form-group row">
                             <label asp-for="Receive" class="col-md-3 col-form-label"></label>
                             <div class="col-md-9">
-                                <input asp-for="Receive" class="form-control" />
+                                <input asp-for="Receive" class="form-control" value="0"/>
                                 <span asp-validation-for="Receive" class="text-danger"></span>
                             </div>
                         </div>
@@ -101,4 +101,39 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function () {
+            var total = 0;
+            var i = 0;
+            $("#search").keypress(function (e) {
+                if (e.keyCode === 13) {
+                    $.ajax({
+                        method: "GET",
+                        url: "/api/barcode/" + $("#search").val(),
+                        dataType: "Json",
+                        success: function (response) {
+                            console.log(response);
+                            var row = "<tr><td>" + response.productName + "</td>";
+                            row += "<td><select class='form-control' name='unit[]' id='unit"+ i +"'>"+ options +"</select></td>";
+                            row += "<td>" + response.price + "</td>";
+                            row += "<td><input type='number' name='qty[]' class='form-control' value='1'/></td>";
+                            row += "<td>" + response.price + "</td>";
+                            row += "<td><input type='number' class='form-control' name='disc[]' value='0'/></td>";
+                            row += "<td>" + response.price + "</td>";
+                            row += "<td><button class='btn btn-danger'><i class='fa fa-trash'></i></button></td></tr>";
+                            $("#tsale").append(row);
+                            total += response.price;
+                            $("#Total").val(total);
+                            $("#GrandTotal").val(total);
+                            $("#unit" + i).val(response.unitId);
+                            i++;
+                        }, error: function (error) {
+                            console.log(error);
+                        }
+                    });
+                    $("#search").val("");
+                }
+            });
+        });
+    </script>
 }

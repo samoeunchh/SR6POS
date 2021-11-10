@@ -2,3 +2,18 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
+var options = "";
+
+$.ajax({
+    method: "GET",
+    url: "/Products/GetUnits",
+    contentType: "application/json",
+    success: function (data) {
+        $.each(data, function (i, v) {
+            options += "<option value='" + v.unitId + "'>" + v.unitName + "</option>";
+        });
+    },
+    error: function (error) {
+        console.log(error);
+    }
+});
