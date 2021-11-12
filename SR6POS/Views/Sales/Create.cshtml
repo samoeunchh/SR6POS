@@ -113,8 +113,9 @@
                         dataType: "Json",
                         success: function (response) {
                             console.log(response);
+                            var pid = "'" + response.productId + "'";
                             var row = "<tr><td>" + response.productName + "</td>";
-                            row += "<td><select class='form-control' name='unit[]' id='unit"+ i +"'>"+ options +"</select></td>";
+                            row += '<td><select class="form-control" name="unit[]" onChange="UnitChange(' + pid + ')" id="unit' + i +'">' + options + '</select></td>';
                             row += "<td>" + response.price + "</td>";
                             row += "<td><input type='number' name='qty[]' class='form-control qty' value='1'/></td>";
                             row += "<td>" + response.price + "</td>";
@@ -154,6 +155,9 @@
         $(document).on("blur", ".discount", function () {
             Calculation();
         });
+        function UnitChange(pid) {
+            alert(pid);
+        }
         function Calculation() {
             var total = 0;
             $("#tsale > tbody > tr").each(function (i) {

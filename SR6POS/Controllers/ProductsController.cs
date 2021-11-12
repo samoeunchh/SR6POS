@@ -221,6 +221,10 @@ namespace SR6POS.Controllers
 
         public async Task<JsonResult> GetUnits()
             => Json(await _context.Unit.ToListAsync());
+
+        public async Task<JsonResult> GetPriceByUnit(Guid pid, Guid uid)
+            => Json(await _context.ProductPrice.FirstOrDefaultAsync(x => x.ProductId.Equals(pid) &&
+            x.UnitId.Equals(uid)));
         private bool ProductExists(Guid id)
         {
             return _context.Product.Any(e => e.ProductId == id);
